@@ -3,14 +3,12 @@ import sqlite3
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-# ==========================================
-# INISISALISASI DATABASE (PROGRESS 1)
-# ==========================================
+
 def buat_database():
   conn = sqlite3.connect("perpustakaan.db")
   cursor = conn.cursor()
 
-  # Tabel Buku
+
   cursor.execute("""
         CREATE TABLE IF NOT EXISTS buku (
             id_buku INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +20,7 @@ def buat_database():
         )
     """)
 
-  # Tabel Anggota
+
   cursor.execute("""
         CREATE TABLE IF NOT EXISTS anggota (
             id_anggota INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,14 +30,14 @@ def buat_database():
         )
     """)
 
-  # Tabel Peminjaman
+
   cursor.execute("""
         CREATE TABLE IF NOT EXISTS peminjaman (
             id_transaksi INTEGER PRIMARY KEY AUTOINCREMENT,
             id_anggota INTEGER NOT NULL,
             id_buku INTEGER NOT NULL,
-            tgl_pinjam TEXT NOT NULL,
-            tgl_kembali TEXT NOT NULL,
+            tanggal_pinjam TEXT NOT NULL,
+            tanggal_kembali TEXT NOT NULL,
             jumlah INTEGER NOT NULL,
             status TEXT DEFAULT 'Dipinjam',
             FOREIGN KEY (id_anggota) REFERENCES anggota (id_anggota),
@@ -53,7 +51,7 @@ def buat_database():
 buat_database()
 
 root = tk.Tk()
-root.title("Aplikasi Perpustakaan - Progress 1")
+root.title("Aplikasi Perpustakaan")
 root.geometry("900x600")
 
 notebook = ttk.Notebook(root)
@@ -114,45 +112,45 @@ for c in cols_buku:
   tabel_buku.column(c, width=120)
 tabel_buku.pack(fill="both", expand=True, padx=10, pady=5)
 
-frame_agt = ttk.Frame(notebook)
-notebook.add(frame_agt, text="Data Anggota ")
+frame_anggota = ttk.Frame(notebook)
+notebook.add(frame_anggota, text="Data Anggota ")
 
-form_agt = ttk.LabelFrame(frame_agt, text=" Form Input Anggota ")
-form_agt.pack(fill="x", padx=10, pady=5)
+form_anggota = ttk.LabelFrame(frame_anggota, text=" Form Input Anggota ")
+form_anggota.pack(fill="x", padx=10, pady=5)
 
-ttk.Label(form_agt, text="Nama Anggota:").grid(
+ttk.Label(form_anggota, text="Nama Anggota:").grid(
     row=0, column=0, padx=5, pady=5, sticky="w"
 )
-entry_nama = ttk.Entry(form_agt, width=25)
+entry_nama = ttk.Entry(form_anggota, width=25)
 entry_nama.grid(row=0, column=1, padx=5, pady=5)
 
-ttk.Label(form_agt, text="No HP / WA:").grid(
+ttk.Label(form_anggota, text="No HP / WA:").grid(
     row=0, column=2, padx=5, pady=5, sticky="w"
 )
-entry_hp = ttk.Entry(form_agt, width=25)
+entry_hp = ttk.Entry(form_anggota, width=25)
 entry_hp.grid(row=0, column=3, padx=5, pady=5)
 
-ttk.Label(form_agt, text="Alamat:").grid(
+ttk.Label(form_anggota, text="Alamat:").grid(
     row=1, column=0, padx=5, pady=5, sticky="w"
 )
-entry_alamat = ttk.Entry(form_agt, width=25)
+entry_alamat = ttk.Entry(form_anggota, width=25)
 entry_alamat.grid(row=1, column=1, padx=5, pady=5)
 
-btn_frame_agt = ttk.Frame(frame_agt)
-btn_frame_agt.pack(fill="x", padx=10, pady=5)
-ttk.Button(btn_frame_agt, text="Tambah", command="").pack(
+btn_frame_anggota = ttk.Frame(frame_anggota)
+btn_frame_anggota.pack(fill="x", padx=10, pady=5)
+ttk.Button(btn_frame_anggota, text="Tambah", command="").pack(
     side="left", padx=2
 )
-ttk.Button(btn_frame_agt, text="Update", command="").pack(
+ttk.Button(btn_frame_anggota, text="Update", command="").pack(
     side="left", padx=2
 )
-ttk.Button(btn_frame_agt, text="Hapus", command="").pack(
+ttk.Button(btn_frame_anggota, text="Hapus", command="").pack(
     side="left", padx=2
 )
 
-cols_agt = ("ID", "Nama", "No HP", "Alamat")
-tabel_anggota = ttk.Treeview(frame_agt, columns=cols_agt, show="headings")
-for c in cols_agt:
+cols_anggota = ("ID", "Nama", "No HP", "Alamat")
+tabel_anggota = ttk.Treeview(frame_anggota, columns=cols_anggota, show="headings")
+for c in cols_anggota:
   tabel_anggota.heading(c, text=c)
   tabel_anggota.column(c, width=150)
 tabel_anggota.pack(fill="both", expand=True, padx=10, pady=5)
@@ -176,12 +174,12 @@ ttk.Label(form_Transaksi, text="Pilih Buku:").grid(
 cb_buku = ttk.Combobox(form_Transaksi, width=25, state="readonly")
 cb_buku.grid(row=0, column=3, padx=5, pady=5)
 
-ttk.Label(form_Transaksi, text="Tgl Pinjam:").grid(
+ttk.Label(form_Transaksi, text="tanggal Pinjam:").grid(
     row=1, column=0, padx=5, pady=5, sticky="w"
 )
-entry_tgl = ttk.Entry(form_Transaksi, width=27)
-entry_tgl.insert(0, date.today().strftime("%Y-%m-%d"))
-entry_tgl.grid(row=1, column=1, padx=5, pady=5)
+entry_tanggal = ttk.Entry(form_Transaksi, width=27)
+entry_tanggal.insert(0, date.today().strftime("%Y-%m-%d"))
+entry_tanggal.grid(row=1, column=1, padx=5, pady=5)
 
 btn_frame_Transaksi = ttk.Frame(frame_Transaksi)
 btn_frame_Transaksi.pack(fill="x", padx=10, pady=5)
@@ -193,8 +191,8 @@ cols_Transaksi = (
     "ID Transaksi",
     "Nama Anggota",
     "Judul Buku",
-    "Tgl Pinjam",
-    "Tgl Kembali",
+    "tanggal Pinjam",
+    "tanggal Kembali",
     "Jumlah",
     "Status",
 )
