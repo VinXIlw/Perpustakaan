@@ -1,10 +1,12 @@
-import tkinter as tk
+from datetime import date
 import sqlite3
+import tkinter as tk
 from tkinter import messagebox, ttk
 
-def database():
+def buat_database():
   conn = sqlite3.connect("perpustakaan.db")
   cursor = conn.cursor()
+
   cursor.execute("""
         CREATE TABLE IF NOT EXISTS buku (
             id_buku INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,6 +17,7 @@ def database():
             stok INTEGER NOT NULL
         )
     """)
+
 
   cursor.execute("""
         CREATE TABLE IF NOT EXISTS anggota (
@@ -43,58 +46,129 @@ def database():
   conn.close()
 
 
+buat_database()
+
 root = tk.Tk()
 root.title("Aplikasi Perpustakaan")
-root.geometry("800x500")
+root.geometry("900x600")
 
 notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True, padx=10, pady=10)
 
+frame_buku = ttk.Frame(notebook)
+notebook.add(frame_buku, text="Data Buku ")
 
-tab_buku = ttk.Frame(notebook)
-notebook.add(tab_buku, text="Data Buku")
+form_buku = ttk.LabelFrame(frame_buku, text=" Form Input Buku ")
+form_buku.pack(fill="x", padx=10, pady=5)
 
-tk.Label(tab_buku, text="Judul Buku:").pack(anchor="w", padx=10, pady=5)
-entry_judul = tk.Entry(tab_buku, width=35)
-entry_judul.pack(anchor="w", padx=10)
+ttk.Label(form_buku, text="Judul Buku:").grid(
+    row=0, column=0, padx=5, pady=5, sticky="w"
+)
+entry_judul = ttk.Entry(form_buku, width=25)
+entry_judul.grid(row=0, column=1, padx=5, pady=5)
 
-tabel_buku = ttk.Treeview(tab_buku, columns=("ID", "Judul", "Stok"), show="headings")
-tabel_buku.heading("ID", text="ID")
-tabel_buku.heading("Judul", text="Judul")
-tabel_buku.heading("Stok", text="Stok")
-tabel_buku.pack(fill="both", expand=True, padx=10, pady=10)
+ttk.Label(form_buku, text="Pengarang:").grid(
+    row=0, column=2, padx=5, pady=5, sticky="w"
+)
+entry_pengarang = ttk.Entry(form_buku, width=25)
+entry_pengarang.grid(row=0, column=3, padx=5, pady=5)
+
+ttk.Label(form_buku, text="Penerbit:").grid(
+    row=1, column=0, padx=5, pady=5, sticky="w"
+)
+entry_penerbit = ttk.Entry(form_buku, width=25)
+entry_penerbit.grid(row=1, column=1, padx=5, pady=5)
+
+ttk.Label(form_buku, text="Kategori:").grid(
+    row=1, column=2, padx=5, pady=5, sticky="w"
+)
+entry_kategori = ttk.Entry(form_buku, width=25)
+entry_kategori.grid(row=1, column=3, padx=5, pady=5)
+
+ttk.Label(form_buku, text="Stok:").grid(
+    row=2, column=0, padx=5, pady=5, sticky="w"
+)
+entry_stok = ttk.Entry(form_buku, width=25)
+entry_stok.grid(row=2, column=1, padx=5, pady=5)
 
 
-tab_anggota = ttk.Frame(notebook)
-notebook.add(tab_anggota, text="Data Anggota")
+cols_buku = ("ID", "Judul", "Pengarang", "Penerbit", "Kategori", "Stok")
+tabel_buku = ttk.Treeview(frame_buku, columns=cols_buku, show="headings")
+for c in cols_buku:
+  tabel_buku.heading(c, text=c)
+  tabel_buku.column(c, width=120)
+tabel_buku.pack(fill="both", expand=True, padx=10, pady=5)
 
-tk.Label(tab_anggota, text="Nama Anggota:").pack(anchor="w", padx=10, pady=5)
-entry_nama = tk.Entry(tab_anggota, width=35)
-entry_nama.pack(anchor="w", padx=10)
+frame_anggota = ttk.Frame(notebook)
+notebook.add(frame_anggota, text="Data Anggota ")
 
-tabel_anggota = ttk.Treeview(tab_anggota, columns=("ID", "Nama", "No HP"), show="headings")
-tabel_anggota.heading("ID", text="ID")
-tabel_anggota.heading("Nama", text="Nama")
-tabel_anggota.heading("No HP", text="No HP")
-tabel_anggota.pack(fill="both", expand=True, padx=10, pady=10)
+form_anggota = ttk.LabelFrame(frame_anggota, text=" Form Input Anggota ")
+form_anggota.pack(fill="x", padx=10, pady=5)
+
+ttk.Label(form_anggota, text="Nama Anggota:").grid(
+    row=0, column=0, padx=5, pady=5, sticky="w"
+)
+entry_nama = ttk.Entry(form_anggota, width=25)
+entry_nama.grid(row=0, column=1, padx=5, pady=5)
+
+ttk.Label(form_anggota, text="No HP / WA:").grid(
+    row=0, column=2, padx=5, pady=5, sticky="w"
+)
+entry_hp = ttk.Entry(form_anggota, width=25)
+entry_hp.grid(row=0, column=3, padx=5, pady=5)
+
+ttk.Label(form_anggota, text="Alamat:").grid(
+    row=1, column=0, padx=5, pady=5, sticky="w"
+)
+entry_alamat = ttk.Entry(form_anggota, width=25)
+entry_alamat.grid(row=1, column=1, padx=5, pady=5)
 
 
-tab_transaksi = ttk.Frame(notebook)
-notebook.add(tab_transaksi, text="Transaksi & Pengembalian")
+cols_anggota = ("ID", "Nama", "No HP", "Alamat")
+tabel_anggota = ttk.Treeview(frame_anggota, columns=cols_anggota, show="headings")
+for c in cols_anggota:
+  tabel_anggota.heading(c, text=c)
+  tabel_anggota.column(c, width=150)
+tabel_anggota.pack(fill="both", expand=True, padx=10, pady=5)
 
-tk.Label(tab_transaksi, text="Pilih Anggota:").pack(anchor="w", padx=10, pady=5)
-cb_anggota = ttk.Combobox(tab_transaksi, width=33, state="readonly")
-cb_anggota.pack(anchor="w", padx=10)
+frame_transaksi = ttk.Frame(notebook)
+notebook.add(frame_transaksi, text="Transaksi Peminjaman ")
 
-tk.Label(tab_transaksi, text="Pilih Buku:").pack(anchor="w", padx=10, pady=5)
-cb_buku = ttk.Combobox(tab_transaksi, width=33, state="readonly")
-cb_buku.pack(anchor="w", padx=10)
+form_transaksi = ttk.LabelFrame(frame_transaksi, text=" Form Transaksi ")
+form_transaksi.pack(fill="x", padx=10, pady=5)
 
-tabel_transaksi = ttk.Treeview(tab_transaksi, columns=("ID", "Anggota", "Buku", "Status"), show="headings")
-tabel_transaksi.heading("ID", text="ID")
-tabel_transaksi.heading("Anggota", text="Nama Anggota")
-tabel_transaksi.heading("Buku", text="Judul Buku")
-tabel_transaksi.heading("Status", text="Status")
-tabel_transaksi.pack(fill="both", expand=True, padx=10, pady=10)
+ttk.Label(form_transaksi, text="Pilih Anggota:").grid(
+    row=0, column=0, padx=5, pady=5, sticky="w"
+)
+cb_anggota = ttk.Combobox(form_transaksi, width=25, state="readonly")
+cb_anggota.grid(row=0, column=1, padx=5, pady=5)
+
+ttk.Label(form_transaksi, text="Pilih Buku:").grid(
+    row=0, column=2, padx=5, pady=5, sticky="w"
+)
+cb_buku = ttk.Combobox(form_transaksi, width=25, state="readonly")
+cb_buku.grid(row=0, column=3, padx=5, pady=5)
+
+ttk.Label(form_transaksi, text="Tgl Pinjam:").grid(
+    row=1, column=0, padx=5, pady=5, sticky="w"
+)
+entry_tgl = ttk.Entry(form_transaksi, width=27)
+entry_tgl.insert(0, date.today().strftime("%Y-%m-%d"))
+entry_tgl.grid(row=1, column=1, padx=5, pady=5)
+
+cols_transaksi = (
+    "ID Transaksi",
+    "Nama Anggota",
+    "Judul Buku",
+    "Tgl Pinjam",
+    "Tgl Kembali",
+    "Jumlah",
+    "Status",
+)
+tabel_pinjam = ttk.Treeview(frame_transaksi, columns=cols_transaksi, show="headings")
+for c in cols_transaksi:
+  tabel_pinjam.heading(c, text=c)
+  tabel_pinjam.column(c, width=100)
+tabel_pinjam.pack(fill="both", expand=True, padx=10, pady=5)
 
 root.mainloop()
