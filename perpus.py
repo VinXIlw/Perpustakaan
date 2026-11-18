@@ -169,6 +169,13 @@ def bersihkan_form_buku():
         e.delete(0, tk.END)
 
 
+def valid_no_hp(no_hp):
+    if not no_hp.isdigit():
+        messagebox.showerror("Error", "No HP hanya boleh berisi angka!")
+        return False
+    return True
+
+
 def muat_data_anggota():
     for row in tabel_anggota.get_children():
         tabel_anggota.delete(row)
@@ -189,6 +196,8 @@ def tambah_anggota():
     )
     if not all([nama, no_hp, alamat]):
         messagebox.showerror("Error", "Semua kolom form anggota wajib diisi!")
+        return
+    if not valid_no_hp(no_hp):
         return
     conn = sqlite3.connect("perpustakaan.db")
     cursor = conn.cursor()
@@ -226,6 +235,11 @@ def update_anggota():
         entry_hp_agt.get(),
         entry_alamat_agt.get(),
     )
+    if not all([nama, no_hp, alamat]):
+        messagebox.showerror("Error", "Semua kolom form anggota wajib diisi!")
+        return
+    if not valid_no_hp(no_hp):
+        return
     conn = sqlite3.connect("perpustakaan.db")
     cursor = conn.cursor()
     cursor.execute(
