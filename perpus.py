@@ -7,6 +7,7 @@ selected_buku_id = None
 selected_anggota_id = None
 selected_transaksi_id = None
 
+
 def buat_database():
     conn = sqlite3.connect("perpustakaan.db")
     cursor = conn.cursor()
@@ -23,7 +24,6 @@ def buat_database():
         )
     """
     )
-
 
     cursor.execute(
         """
@@ -52,6 +52,7 @@ def buat_database():
 
     conn.commit()
     conn.close()
+
 
 def muat_data_buku():
     for row in tabel_buku.get_children():
@@ -99,7 +100,8 @@ def pilih_buku(event):
         vals = tabel_buku.item(item, "values")
         selected_buku_id = vals[0]
         for e, v in zip(
-            [entry_judul, entry_pengarang, entry_penerbit, entry_kategori, entry_stok],
+            [entry_judul, entry_pengarang, entry_penerbit,
+                entry_kategori, entry_stok],
             vals[1:],
         ):
             e.delete(0, tk.END)
@@ -165,6 +167,7 @@ def bersihkan_form_buku():
         entry_stok,
     ]:
         e.delete(0, tk.END)
+
 
 def muat_data_anggota():
     for row in tabel_anggota.get_children():
@@ -246,7 +249,8 @@ def hapus_anggota():
     ):
         conn = sqlite3.connect("perpustakaan.db")
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM anggota WHERE id=?", (selected_anggota_id,))
+        cursor.execute("DELETE FROM anggota WHERE id=?",
+                       (selected_anggota_id,))
         conn.commit()
         conn.close()
         muat_data_anggota()
@@ -259,6 +263,7 @@ def bersihkan_form_anggota():
     selected_anggota_id = None
     for e in [entry_nama_agt, entry_hp_agt, entry_alamat_agt]:
         e.delete(0, tk.END)
+
 
 def update_dropdown_peminjaman():
     conn = sqlite3.connect("perpustakaan.db")
@@ -289,14 +294,14 @@ def proses_pinjam():
     jumlah = entry_jml.get()
 
     if not all([nama, judul, tgl_pinjam, tgl_kembali, jumlah]):
-        messagebox.showerror("Error", "Semua kolom form transaksi wajib diisi!")
+        messagebox.showerror(
+            "Error", "Semua kolom form transaksi wajib diisi!")
         return
 
     try:
         jml_int = int(jumlah)
         conn = sqlite3.connect("perpustakaan.db")
         cursor = conn.cursor()
-
 
         cursor.execute("SELECT stok FROM buku WHERE judul=?", (judul,))
         stok_db = cursor.fetchone()
@@ -318,7 +323,8 @@ def proses_pinjam():
 
         muat_data_buku()
         muat_data_transaksi()
-        messagebox.showinfo("Sukses", "Transaksi peminjaman berhasil diproses!")
+        messagebox.showinfo(
+            "Sukses", "Transaksi peminjaman berhasil diproses!")
     except ValueError:
         messagebox.showerror("Error", "Jumlah buku harus berupa angka!")
 
@@ -344,7 +350,8 @@ def pilih_transaksi(event):
 def kembalikan_buku():
     global selected_transaksi_id
     if not selected_transaksi_id:
-        messagebox.showerror("Error", "Pilih transaksi pada tabel terlebih dahulu!")
+        messagebox.showerror(
+            "Error", "Pilih transaksi pada tabel terlebih dahulu!")
         return
 
     conn = sqlite3.connect("perpustakaan.db")
@@ -378,7 +385,8 @@ def kembalikan_buku():
 
     muat_data_buku()
     muat_data_transaksi()
-    messagebox.showinfo("Sukses", "Buku berhasil dikembalikan & stok dipulihkan!")
+    messagebox.showinfo(
+        "Sukses", "Buku berhasil dikembalikan & stok dipulihkan!")
 
 
 def hapus_transaksi():
@@ -391,7 +399,8 @@ def hapus_transaksi():
     ):
         conn = sqlite3.connect("perpustakaan.db")
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM transaksi WHERE id=?", (selected_transaksi_id,))
+        cursor.execute("DELETE FROM transaksi WHERE id=?",
+                       (selected_transaksi_id,))
         conn.commit()
         conn.close()
         muat_data_transaksi()
@@ -405,6 +414,7 @@ def bersihkan_form_transaksi():
     combo_buku.set("")
     entry_jml.delete(0, tk.END)
     entry_jml.insert(0, "1")
+
 
 buat_database()
 
@@ -422,23 +432,28 @@ notebook.add(tab_buku, text="Data Buku")
 f_buku = tk.LabelFrame(tab_buku, text=" Form Input Buku ", padx=10, pady=10)
 f_buku.pack(fill="x", padx=10, pady=10)
 
-tk.Label(f_buku, text="Judul Buku:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
+tk.Label(f_buku, text="Judul Buku:").grid(
+    row=0, column=0, sticky="w", padx=5, pady=5)
 entry_judul = tk.Entry(f_buku, width=28)
 entry_judul.grid(row=0, column=1, padx=5, pady=5)
 
-tk.Label(f_buku, text="Pengarang:").grid(row=0, column=2, sticky="w", padx=5, pady=5)
+tk.Label(f_buku, text="Pengarang:").grid(
+    row=0, column=2, sticky="w", padx=5, pady=5)
 entry_pengarang = tk.Entry(f_buku, width=28)
 entry_pengarang.grid(row=0, column=3, padx=5, pady=5)
 
-tk.Label(f_buku, text="Penerbit:").grid(row=1, column=0, sticky="w", padx=5, pady=5)
+tk.Label(f_buku, text="Penerbit:").grid(
+    row=1, column=0, sticky="w", padx=5, pady=5)
 entry_penerbit = tk.Entry(f_buku, width=28)
 entry_penerbit.grid(row=1, column=1, padx=5, pady=5)
 
-tk.Label(f_buku, text="Kategori:").grid(row=1, column=2, sticky="w", padx=5, pady=5)
+tk.Label(f_buku, text="Kategori:").grid(
+    row=1, column=2, sticky="w", padx=5, pady=5)
 entry_kategori = tk.Entry(f_buku, width=28)
 entry_kategori.grid(row=1, column=3, padx=5, pady=5)
 
-tk.Label(f_buku, text="Stok:").grid(row=2, column=0, sticky="w", padx=5, pady=5)
+tk.Label(f_buku, text="Stok:").grid(
+    row=2, column=0, sticky="w", padx=5, pady=5)
 entry_stok = tk.Entry(f_buku, width=28)
 entry_stok.grid(row=2, column=1, padx=5, pady=5)
 
@@ -458,12 +473,14 @@ tk.Button(
 ).pack(side="left", padx=5)
 
 col_buku = ("ID", "Judul", "Pengarang", "Penerbit", "Kategori", "Stok")
-tabel_buku = ttk.Treeview(tab_buku, columns=col_buku, show="headings", height=10)
+tabel_buku = ttk.Treeview(tab_buku, columns=col_buku,
+                          show="headings", height=10)
 for c, w in zip(
     col_buku, [40, 160, 130, 120, 110, 60]
 ):
     tabel_buku.heading(c, text=c)
-    tabel_buku.column(c, width=w, anchor="center" if c in ["ID", "Stok"] else "w")
+    tabel_buku.column(c, width=w, anchor="center" if c in [
+                      "ID", "Stok"] else "w")
 tabel_buku.pack(fill="both", expand=True, padx=10, pady=10)
 tabel_buku.bind("<ButtonRelease-1>", pilih_buku)
 
@@ -471,7 +488,8 @@ tabel_buku.bind("<ButtonRelease-1>", pilih_buku)
 tab_anggota = ttk.Frame(notebook)
 notebook.add(tab_anggota, text="Data Anggota")
 
-f_agt = tk.LabelFrame(tab_anggota, text=" Form Input Anggota ", padx=10, pady=10)
+f_agt = tk.LabelFrame(
+    tab_anggota, text=" Form Input Anggota ", padx=10, pady=10)
 f_agt.pack(fill="x", padx=10, pady=10)
 
 tk.Label(f_agt, text="Nama Anggota:").grid(
@@ -486,7 +504,8 @@ tk.Label(f_agt, text="No HP / WA:").grid(
 entry_hp_agt = tk.Entry(f_agt, width=30)
 entry_hp_agt.grid(row=0, column=3, padx=5, pady=5)
 
-tk.Label(f_agt, text="Alamat:").grid(row=1, column=0, sticky="w", padx=5, pady=5)
+tk.Label(f_agt, text="Alamat:").grid(
+    row=1, column=0, sticky="w", padx=5, pady=5)
 entry_alamat_agt = tk.Entry(f_agt, width=30)
 entry_alamat_agt.grid(row=1, column=1, padx=5, pady=5)
 
@@ -506,7 +525,8 @@ tk.Button(
 ).pack(side="left", padx=5)
 
 col_agt = ("ID", "Nama", "No HP", "Alamat")
-tabel_anggota = ttk.Treeview(tab_anggota, columns=col_agt, show="headings", height=10)
+tabel_anggota = ttk.Treeview(
+    tab_anggota, columns=col_agt, show="headings", height=10)
 for c, w in zip(col_agt, [50, 200, 150, 220]):
     tabel_anggota.heading(c, text=c)
     tabel_anggota.column(c, width=w, anchor="center" if c == "ID" else "w")
@@ -526,7 +546,8 @@ tk.Label(f_trx, text="Pilih Anggota:").grid(
 combo_anggota = ttk.Combobox(f_trx, width=28, state="readonly")
 combo_anggota.grid(row=0, column=1, padx=5, pady=5)
 
-tk.Label(f_trx, text="Pilih Buku:").grid(row=0, column=2, sticky="w", padx=5, pady=5)
+tk.Label(f_trx, text="Pilih Buku:").grid(
+    row=0, column=2, sticky="w", padx=5, pady=5)
 combo_buku = ttk.Combobox(f_trx, width=28, state="readonly")
 combo_buku.grid(row=0, column=3, padx=5, pady=5)
 
@@ -547,7 +568,8 @@ entry_tgl_kembali = tk.Entry(f_trx, width=30)
 entry_tgl_kembali.grid(row=1, column=3, padx=5, pady=5)
 entry_tgl_kembali.insert(0, tgl_depan)
 
-tk.Label(f_trx, text="Jumlah:").grid(row=2, column=0, sticky="w", padx=5, pady=5)
+tk.Label(f_trx, text="Jumlah:").grid(
+    row=2, column=0, sticky="w", padx=5, pady=5)
 entry_jml = tk.Entry(f_trx, width=30)
 entry_jml.grid(row=2, column=1, padx=5, pady=5)
 entry_jml.insert(0, "1")
@@ -581,7 +603,8 @@ tabel_transaksi = ttk.Treeview(
 )
 for c, w in zip(col_trx, [80, 130, 130, 100, 100, 60, 90]):
     tabel_transaksi.heading(c, text=c)
-    tabel_transaksi.column(c, width=w, anchor="center" if c in ["ID Transaksi", "Jumlah", "Status"] else "w")
+    tabel_transaksi.column(c, width=w, anchor="center" if c in [
+                           "ID Transaksi", "Jumlah", "Status"] else "w")
 tabel_transaksi.pack(fill="both", expand=True, padx=10, pady=10)
 tabel_transaksi.bind("<ButtonRelease-1>", pilih_transaksi)
 
